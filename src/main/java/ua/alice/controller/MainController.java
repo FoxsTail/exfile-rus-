@@ -9,6 +9,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -77,6 +80,18 @@ public class MainController {
         return new ModelAndView("file", "file", file);
     }
 
+    @RequestMapping(value = "/files/{id}/delete")
+    public ModelAndView fileDelete(@PathVariable("id") Long id) {
+        ExFile file = exFileJpaRepository.findOne(id);
+        exFileJpaRepository.delete(file);
+        return new ModelAndView("redirect:/web/files/deleted");
+    }
+
+    @RequestMapping(value = "/files/deleted")
+    public ModelAndView deletedFiles() {
+        return new ModelAndView("deleted", "message", "Файл был успешно удален!");
+    }
+
 
     @RequestMapping("/users")
     public ModelAndView users() {
@@ -112,14 +127,39 @@ public class MainController {
             return new ModelAndView("users");
         }
         ModelAndView modelAndView = new ModelAndView("user");
-
+/*
         User actual = userJpaRepository.findOne(id);
         user.setRole(actual.getRole());
+
+        ShaPasswordEncoder encoder = new ShaPasswordEncoder();
+        String psw = encoder.encodePassword(user.getPassword(), null);
+        user.setPassword(psw);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
         userDetails.setEmail(user.getEmail());
 
+        System.err.println(actual.getPassword());
+        System.err.println(user.getPassword());
+
+
+        userJpaRepository.save(user);
+        System.err.println(actual.getId());
+        System.err.println(user.getId());*/
+
+        User actual = userJpaRepository.findOne(id);
+        user.setRole(actual.getRole());
+
+        ShaPasswordEncoder encoder = new ShaPasswordEncoder();
+        String psw = encoder.encodePassword(user.getPassword(), null);
+        user.setPassword(psw);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser userDetails = (SecurityUser) authentication.getPrincipal();
+        userDetails.setEmail(user.getEmail());
+
+        System.err.println(actual.getPassword());
+        System.err.println(user.getPassword());
         userJpaRepository.save(user);
 
         modelAndView.addObject("message", "Выш профиль был обновлен удачно!=)");
@@ -129,11 +169,19 @@ public class MainController {
     }
 
     @RequestMapping(value = "/users/{id}/delete")
-    public ModelAndView userUpdate(@PathVariable("id") Long id) {
+    public ModelAndView userDelete(@PathVariable("id") Long id) {
         User user = userJpaRepository.findOne(id);
+        User user1 = getCurrentUser();
+        if (user.getId().equals(user1.getId())) {
+            return new ModelAndView("redirect:/web/notDeleted");
+        }
         userJpaRepository.delete(user);
         return new ModelAndView("redirect:/web/deleted");
+    }
 
+    @RequestMapping(value = "/notDeleted")
+    public ModelAndView notDeleted() {
+        return new ModelAndView("notDeleted", "message", "В этом приложении нельзя совершать самоубийство!=)");
     }
 
     @RequestMapping(value = "/deleted")
@@ -191,7 +239,7 @@ public class MainController {
                     + file.getName());
             InputStream is = resource.getInputStream();
             IOUtils.copy(is, response.getOutputStream());
-            //response.flushBuffer(); - подумать на этой бородой на досуге и постичь дзен
+            response.flushBuffer();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -213,6 +261,15 @@ public class MainController {
         }
 
         if (!file.isEmpty()) {
+            boolean verify = false;
+            try {
+                verify = ExFile.verifyChecksum(file, exFile.getSenger_sha());
+            } catch (IOException | NoSuchAlgorithmException e) {
+                System.err.println(e);
+            }
+            if (!verify) {
+                return new ModelAndView("someErrors", "message", "Упс, проблема с передачей файла, попробуете еще раз?");
+            }
 //---------------//
             exFile.setName(file.getOriginalFilename());
             String name = file.getOriginalFilename();
@@ -252,7 +309,6 @@ public class MainController {
                 exFile.addGetterSubdivision(subdivision);
             }
 
-//------финт ушами----//
             User user = getCurrentUser();
             exFile.setUser(user);
 //----//
@@ -308,7 +364,7 @@ public class MainController {
 
     @RequestMapping("/logout")
     public ModelAndView logout() {
-        return new ModelAndView("byepage");
+        return new ModelAndView("login");
     }
 
 
@@ -339,4 +395,6 @@ public class MainController {
 
         return user;
     }
+
+
 }

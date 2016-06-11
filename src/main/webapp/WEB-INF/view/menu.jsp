@@ -15,5 +15,5 @@
    | <a href="/web/users">Пользователи</a> |
     <a href="/web/files">Файлы</a>
   </sec:authorize>
-  <a href="/web/logout" style="float: right">Выйти</a>
+  <a href="/logout" style="float: right">Выйти</a>
 </div>

@@ -1,6 +1,7 @@
 package ua.alice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +38,12 @@ public class AuthorizationController {
         if (bindingResult.hasErrors()) {
             return new ModelAndView("/registration");
         }
+
+        ShaPasswordEncoder encoder = new ShaPasswordEncoder();
+        String psw = encoder.encodePassword(user.getPassword(), null);
+        user.setPassword(psw);
+
+
         Department department = departmentJpaRepository.findOne(Integer.parseInt(user.getDepartment_trans()));
         Subdivision subdivision = subdivisionJpaRepository.findOne(Integer.parseInt(user.getSubdivision_trans()));
 
@@ -50,7 +57,6 @@ public class AuthorizationController {
         userJpaRepository.save(user);
 
         return new ModelAndView("userSuccess", "user", user);
-        //return new ModelAndView("redirect:/web/files");
     }
 
     @RequestMapping("/login")
@@ -69,31 +75,12 @@ public class AuthorizationController {
         }
 
 
-      /*  List<Department> departments = departmentJpaRepository.findAll();
+        List<Department> departments = departmentJpaRepository.findAll();
         Map<Integer, String> depMap = new HashMap<>();
         for (Department d : departments) {
             depMap.put(d.getIdd(), d.getName());
         }
-*/
 
-       /* Map<Integer, String> depFS = new HashMap<>();
-        Map<Integer, String> depFS2 = new HashMap<>();
-
-        for (Department d : subdivisions.get(0).getDepartments()) {
-            depFS.put(d.getIdd(), d.getName());
-        }
-        for (Department d : subdivisions.get(1).getDepartments()) {
-            depFS2.put(d.getIdd(), d.getName());
-        }
-
-        Map<Integer, Map<Integer, String>> subPerDep = new HashMap<>();
-        subPerDep.put(subdivisions.get(0).getIds(), depFS);
-        subPerDep.put(subdivisions.get(1).getIds(), depFS2);*/
-        //сюда уиклом выгрузить пары
-        /*for(Map.Entry<Integer, Map<Integer, String>> map: subPerDep.entrySet()){
-            System.err.println(map);
-        }
-*/
       /*  Map<Integer, String> trans = new HashMap<>();
         Map<String, Map<Integer, String>> subDep = new HashMap<>();
         for (Subdivision sub : subdivisions) {
@@ -107,11 +94,10 @@ public class AuthorizationController {
 */
         //modelAndView.addObject("test", subPerDep);
         modelAndView.addObject("sub", subMap);
-       // modelAndView.addObject("dep", depMap);
+        modelAndView.addObject("dep", depMap);
 
         modelAndView.addObject("user", new User());
         return modelAndView;
     }
-
 
 }

@@ -7,10 +7,7 @@ package ua.alice.entity;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,37 +19,43 @@ public class User {
     @Column(name = "id_user")
     private Long id;
 
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "[A-Z][a-z]+")
+    @Size(min = 2, max = 20, message="Слишком короткий логин")
+    @Pattern(regexp = "[A-Z][a-z]+", message="Логин должен соответствовать формату [A-Z][a-z]+")
     @Column(name = "login_user", unique = true)
     private String login;
 
-   @Size(min = 6, max = 20)
+   @Size(min = 6, message="Слишком короткий пароль")
     @Column(name = "password_user")
     private String password;
 
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "[А-Я][а-я]+")
+    @Size(min = 1, max = 20, message="Слишком короткое имя")
+    @Pattern(regexp = "[А-Я][а-я]+", message="Имя должен соответствовать формату [А-Я][а-я]+")
     @Column(name = "name_user")
     private String name;
 
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "[А-Я][а-я]+")
+    @Size(min = 5, max = 20, message="Фамилия из 1й буквы? Не верю=)")
+    @Pattern(regexp = "[А-Я][а-я]+", message="Фамилия должна соответствовать формату [А-Я][а-я]+")
     @Column(name = "surname_user")
     private String surname;
 
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "[А-Я][а-я]+")
+    @Size(min = 2, max = 20, message="Отчество из 1й буквы? Правда?.")
+    @Pattern(regexp = "[А-Я][а-я]+", message="Отчество должно соответствовать формату [А-Я][а-я]+")
     @Column(name = "patronymic_user")
     private String patronymic;
 
-    @Email
+    @NotNull(message="Email должен быть задан")
+    @Pattern(regexp = "^(?:[a-zA-Z0-9_'^&/+-])+(?:\\.(?:[a-zA-Z0-9_'^&/+-])+)" +
+            "*@(?:(?:\\[?(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))\\.)" +
+            "{3}(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\]?)|(?:[a-zA-Z0-9-]+\\.)" +
+            "+(?:[a-zA-Z]){2,}\\.?)$",
+            message = "заданный email не может существовать")
+    @Email(message="Invalid email")
     @Column(name = "email_user", unique = true)
     private String email;
 
-    @Column(name = "inn_user")
+    @Column(name = "inn_user", unique = true)
     private String inn;
-//---------//
+//----зовнішні зв'язки-----//
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_subdivision")
     private Subdivision subdivision;
@@ -67,20 +70,19 @@ public class User {
     @Column(name = "role_user")
     private Role role;
 
-    @Pattern(regexp = "^[1-9][0-9]*$")
+    @Pattern(regexp = "^[1-9][0-9]*$", message="Выберите отдел")
     @Transient
     private String department_trans;
 
-    @Pattern(regexp = "^[1-9][0-9]*$")
+    @Pattern(regexp = "^[1-9][0-9]*$", message="Выберите подразделение")
     @Transient
     private String subdivision_trans;
 
 
-//-----------constructors
+//-----конструктори
 
     public User() {
     }
-
 
     public User(String login, String password, String name, Role role, String surname, String patronymic, String email, String inn) {
         this.login = login;
@@ -93,7 +95,7 @@ public class User {
         this.inn = inn;
     }
 
-//-------------methods
+    //------методи
 
     public ExFile getLastAddedFile(){
         return exFiles.get(exFiles.size()-1);
@@ -104,8 +106,7 @@ public class User {
     }
 
 
-//---------------getters and setters
-
+    //--------------гетери і сетери
 
     public List<ExFile> getExFiles() {
         return exFiles;

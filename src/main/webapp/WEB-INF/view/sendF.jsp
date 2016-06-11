@@ -1,3 +1,5 @@
+<%@ page import="org.springframework.web.multipart.MultipartFile" %>
+<%@ page import="ua.alice.entity.ExFile" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
@@ -11,7 +13,8 @@
 <head>
     <title>Send file</title>
     <link rel="stylesheet" type="text/css" href="../../resources/styles/css/bootstrap.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>--%>
+    <script type="text/javascript" src="../../resources/styles/js/jquery.min.js"></script>
 </head>
 <body>
 <div id="container">
@@ -76,11 +79,19 @@
             <tr>
                 <td><span><form:errors path="multipartFilefile" cssClass="error"/>
 		</span></td>
+                   <td> <%--  <%String hash = ExFile.hashIt()%>--%>
+                <%
+                   MultipartFile file = (MultipartFile) pageContext.findAttribute("uploadForm.multipartFilefile");
+                    if(file!=null){%>
+                  <%=file.getOriginalFilename()%>
+                  <%  }
+                %>
+                   </td>
             </tr>
 
 
             <tr>
-                <td>Введите информацию о файле: </td>
+                <td>Введите информацию о файле:</td>
                 <td><form:input type="text" name="about" path="about" placeholder="О файле"/>
                     <br> <form:errors path="about" cssClass="error"/>
                 </td>
@@ -89,7 +100,7 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td ><input type="submit" align="right" class="great_btn" value="Отправить файл"/></td>
+                <td><input type="submit" align="right" class="great_btn" value="Отправить файл"/></td>
 
             </tr>
         </form:form>

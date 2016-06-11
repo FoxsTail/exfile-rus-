@@ -5,9 +5,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Лис on 25.04.2016.
- */
+
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -26,22 +24,19 @@ public class Category {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "getter_category", cascade = CascadeType.ALL)
     private List<ExFile> exFiles = new ArrayList<>();
 
-    //-----constructors
+    //-----конструктори
     public Category() {
     }
-
     public Category(String name) {
         this.name = name;
     }
 
-
-    //------methods
+    //------методи
     public void addFile(ExFile exFile) {
         exFiles.add(exFile);
     }
 
-    //--------------getters and setters
-
+    //--------------гетери і сетери
 
     public Integer getIdc() {
         return idc;

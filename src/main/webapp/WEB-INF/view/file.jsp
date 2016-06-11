@@ -49,8 +49,11 @@
     </tr>
 </table>
 <a href="/web/files">
-    <button>Назад</button>
+    <button class="great_btn">Назад</button>
 </a>
+    <a href="/web/files/${file.id}/delete">
+        <button class="great_btn">Удалить файл</button>
+    </a>
     </div>
 </body>
 </html>

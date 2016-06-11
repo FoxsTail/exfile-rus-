@@ -30,7 +30,6 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
                     <td>Введите категорию:</td>
                     <td><input type="text" name="category" placeholder="Категория"></td>
 

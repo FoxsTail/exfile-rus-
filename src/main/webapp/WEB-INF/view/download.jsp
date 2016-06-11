@@ -23,7 +23,7 @@
                 <td>Введите дату: </td>
                 <td><input type="text" name="date" placeholder="дд\мм\гггг"></td>
                 <td>
-                    <button type="submit" class="great_btn">Search</button>
+                    <button type="submit" class="great_btn">Поиск</button>
                 </td>
                 <br>
             </tr>

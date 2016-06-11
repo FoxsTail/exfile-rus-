@@ -12,8 +12,9 @@
 <html>
 <head>
     <title>Registration</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<%--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>--%>
     <link rel="stylesheet" type="text/css" href="../../resources/styles/css/bootstrap.css"/>
+    <script type="text/javascript" src="../../resources/styles/js/jquery.min.js"></script>
 </head>
 <body>
 <div id="container" align="center">
@@ -23,9 +24,9 @@
         <table>
             <tr>
                 <td>
-                    <form:label for="login" path="Login">Логин</form:label>
+                    <form:label for="login" path="Login">Логин(англ.)</form:label>
                 </td>
-                <td><form:input type="text" name="login" path="login" placeholder="Логин"/>
+                <td><form:input type="text" name="login" path="login" placeholder="Login"/>
                     <br/><form:errors path="login" cssClass="error"/></td>
             </tr>
             <tr>
@@ -88,9 +89,9 @@
                 <td>
                     <form:label for="dep" path="department_trans">Отдел</form:label>
                 </td>
-                <td><form:select disabled="true" path="department_trans" name="dep">
+                <td><form:select disabled="false" path="department_trans" name="dep">
                     <form:option value="0" label="--- Выберите отдел---"/>
-                    <%--     <form:options items="${dep}"/>--%>
+                         <form:options items="${dep}"/>
                 </form:select>
                     <br/><form:errors path="department_trans" cssClass="error"/>
                 </td>
@@ -123,13 +124,24 @@
 
             var dep = {
                 1: {
-                    1: 'Finance',
-                    2: 'Law',
-                    3: 'Minister'
+                    1: 'Хирургия',
+                    2: 'Гинекология',
+                    3: 'Урология',
+                    5: 'Психиатрия'
                 },
                 2: {
-                    1: 'Finance',
-                    2: 'Law'
+                    1: 'Хирургия',
+                    2: 'Гинекология',
+                    3: 'Урология',
+                    4: 'Реанимация',
+                    5: 'Психиатрия'
+                },
+                3:
+                {
+                    1: 'Хирургия',
+                    2: 'Гинекология',
+                    4: 'Реанимация',
+                    5: 'Психиатрия'
                 }
             };
             console.log('1212121', sub)

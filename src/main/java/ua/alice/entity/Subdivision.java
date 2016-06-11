@@ -29,7 +29,7 @@ public class Subdivision {
             inverseJoinColumns = @JoinColumn(name = "idd", referencedColumnName = "id_department"))
     private List<Department> departments = new ArrayList<>();
 
-  //-----constructors
+    //-----конструктори
 
     Subdivision() {
     }
@@ -43,7 +43,7 @@ public class Subdivision {
         this.name = name;
     }
 
-  //------methods
+    //------методи
     public void addUser(User user) {
         user.setSubdivision(this);
         users.add(user);
@@ -60,7 +60,7 @@ public class Subdivision {
         }
     }
 
-    //----------------getters and setters
+    //--------------гетери і сетери
 
 
     public Integer getIds() {

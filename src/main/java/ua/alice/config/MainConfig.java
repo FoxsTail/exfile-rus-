@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -20,7 +21,7 @@ import javax.servlet.MultipartConfigElement;
 public class MainConfig extends WebMvcConfigurerAdapter{
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/index.html");
+        registry.addViewController("/").setViewName("forward:/auth/login");
         registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
         super.addViewControllers(registry);
     }
@@ -42,10 +43,10 @@ public class MainConfig extends WebMvcConfigurerAdapter{
         return factory.createMultipartConfig();
     }
 
-
     @Override
     public void configureDefaultServletHandling(
             DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
+
 }

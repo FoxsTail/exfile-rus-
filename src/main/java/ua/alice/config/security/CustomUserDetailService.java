@@ -10,6 +10,7 @@ import ua.alice.repository.UserJpaRepository;
 
 /**
  * Created by Лис on 26.05.2016.
+ * 2
  */
 @Component
 public class CustomUserDetailService implements UserDetailsService {

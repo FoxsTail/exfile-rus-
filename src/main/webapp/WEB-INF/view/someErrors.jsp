@@ -15,7 +15,7 @@
 <div id="container">
     <%@include file="menu.jsp" %>
     <br>
-    Упс, ${message}
+     ${message}
     <a href="/web/send">
         <button class="great_btn">Назад</button>
     </a>

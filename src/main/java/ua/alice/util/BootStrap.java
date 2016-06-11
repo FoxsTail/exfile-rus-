@@ -1,6 +1,7 @@
 package ua.alice.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ua.alice.entity.*;
 import ua.alice.repository.*;
@@ -69,11 +70,12 @@ public class BootStrap {
         subdivision2.addDepartment(department1, department2, department3, department4, department5);
         subdivision3.addDepartment(department1, department2, department4, department5);
 
+        ShaPasswordEncoder encoder = new ShaPasswordEncoder();
 
-        User user = new User("Admin", "1111111", "Админ", Role.ADMIN, "Вселенский", "Властелинович", "somemail@gmail.com", "45678912378");
-        User user1 = new User("Dominic", "22222222", "Иаков", Role.USER, "Берман", "Соломонович", "magic@ymail.com", "78945612345");
-        User user2 = new User("Amina", "33333333", "Анна", Role.USER, "Мирончук", "Валериевна", "A_valera@ymail.com", "45645612312");
-        User user3 = new User("Lord", "33333333", "Петр", Role.USER, "Хомяков", "Владиславович", "saint_peter@ymail.com", "98745638543");
+        User user = new User("Admin", "2ea6201a068c5fa0eea5d81a3863321a87f8d533", "Админ", Role.ADMIN, "Вселенский", "Властелинович", "somemail@gmail.com", "45678912378");
+        User user1 = new User("Dominic", "f638e2789006da9bb337fd5689e37a265a70f359", "Иаков", Role.USER, "Берман", "Соломонович", "magic@ymail.com", "78945612345");
+        User user2 = new User("Amina", "14993032bd035408dd9ab6f6e6ad0b023eced296", "Анна", Role.USER, "Мирончук", "Валериевна", "A_valera@ymail.com", "45645612312");
+        User user3 = new User("Lord", "14993032bd035408dd9ab6f6e6ad0b023eced296", "Петр", Role.USER, "Хомяков", "Владиславович", "saint_peter@ymail.com", "98745638543");
 
 
         department1.addUser(user);

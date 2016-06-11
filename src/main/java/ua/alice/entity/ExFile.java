@@ -3,9 +3,15 @@ package ua.alice.entity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +34,7 @@ public class ExFile {
     @Column(name = "size_file")
     private Long size;
 
-    @Size(min = 2, max = 20)
-    @Pattern(regexp = "[А-Я][а-я]+")
+    @NotNull(message = "Поле не должно быть пустое!")
     @Column(name = "about_file")
     private String about;
 
@@ -64,6 +69,12 @@ public class ExFile {
     private List<Category> getter_category = new ArrayList<>();
 
     @Transient
+    private String senger_sha;
+
+    @Transient
+    private String getter_sha;
+
+    @Transient
     private MultipartFile multipartFilefile;
 
     @Transient
@@ -75,6 +86,7 @@ public class ExFile {
     @Transient
     private String[] value_departments;
 
+//-----конструктори
 
     public ExFile() {
     }
@@ -85,11 +97,11 @@ public class ExFile {
         this.about = about;
     }
 
+    //------методи
     public void addGetterCategory(Category category) {
         category.addFile(this);
         getter_category.add(category);
     }
-
 
     public void addGetterSubdivision(Subdivision subdivision) {
         subdivision.addFile(this);
@@ -101,8 +113,70 @@ public class ExFile {
         getter_departments.add(department);
     }
 
-//------------------------getters & setters
+    public static boolean verifyChecksum(MultipartFile file, String testChecksum) throws NoSuchAlgorithmException, IOException {
+        String fileHash = null;
 
+        MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+
+        File convFile = new File(file.getOriginalFilename());
+        convFile.createNewFile();
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+
+        FileInputStream fis = new FileInputStream(convFile);
+
+        byte[] data = new byte[1024];
+        int read = 0;
+        while ((read = fis.read(data)) != -1) {
+            sha1.update(data, 0, read);
+        }
+        byte[] hashBytes = sha1.digest();
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < hashBytes.length; i++) {
+            sb.append(Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        fileHash = sb.toString();
+
+
+        return fileHash.equals(testChecksum);
+    }
+
+    public static String hashIt(MultipartFile file) {
+
+        String fileHash = null;
+        try {
+            MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+
+            File convFile = new File(file.getOriginalFilename());
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+
+            FileInputStream fis = new FileInputStream(convFile);
+
+            byte[] data = new byte[1024];
+            int read = 0;
+            while ((read = fis.read(data)) != -1) {
+                sha1.update(data, 0, read);
+            }
+            byte[] hashBytes = sha1.digest();
+
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < hashBytes.length; i++) {
+                sb.append(Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            fileHash = sb.toString();
+        } catch (IOException | NoSuchAlgorithmException e) {
+            System.err.println(e);
+        }
+        return fileHash;
+    }
+
+    //--------------гетери і сетери
 
     public User getUser() {
         return user;
@@ -233,5 +307,19 @@ public class ExFile {
         this.value_categories = value_categories;
     }
 
+    public String getSenger_sha() {
+        return senger_sha;
+    }
 
+    public void setSenger_sha(String senger_sha) {
+        this.senger_sha = senger_sha;
+    }
+
+    public String getGetter_sha() {
+        return getter_sha;
+    }
+
+    public void setGetter_sha(String getter_sha) {
+        this.getter_sha = getter_sha;
+    }
 }

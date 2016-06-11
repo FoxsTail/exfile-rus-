@@ -25,7 +25,7 @@ public class Department {
     private List<Subdivision> subdivisions = new ArrayList<>();
 
 
-    //-----constructors
+    //-----конструктори
     public Department() {
     }
 
@@ -38,7 +38,7 @@ public class Department {
         this.name = name;
     }
 
-    //---------methods
+    //------методи
     public void addUser(User user) {
         user.setDepartment(this);
         users.add(user);
@@ -52,7 +52,7 @@ public class Department {
         subdivisions.add(subdivision);
     }
 
-    //-------------------getters and setters
+    //--------------гетери і сетери
 
     public Integer getIdd() {
         return idd;
