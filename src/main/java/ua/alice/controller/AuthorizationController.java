@@ -81,7 +81,8 @@ public class AuthorizationController {
             depMap.put(d.getIdd(), d.getName());
         }
 
-      /*  Map<Integer, String> trans = new HashMap<>();
+      /* вместо стринга ключем лучше кинуть интедж
+        Map<Integer, String> trans = new HashMap<>();
         Map<String, Map<Integer, String>> subDep = new HashMap<>();
         for (Subdivision sub : subdivisions) {
             List<Department> dep = sub.getDepartments();

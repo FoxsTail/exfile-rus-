@@ -69,10 +69,7 @@ public class ExFile {
     private List<Category> getter_category = new ArrayList<>();
 
     @Transient
-    private String senger_sha;
-
-    @Transient
-    private String getter_sha;
+    private String sender_sha;
 
     @Transient
     private MultipartFile multipartFilefile;
@@ -139,42 +136,11 @@ public class ExFile {
         }
 
         fileHash = sb.toString();
-
+        System.err.println(fileHash);
 
         return fileHash.equals(testChecksum);
     }
 
-    public static String hashIt(MultipartFile file) {
-
-        String fileHash = null;
-        try {
-            MessageDigest sha1 = MessageDigest.getInstance("SHA1");
-
-            File convFile = new File(file.getOriginalFilename());
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
-            fos.close();
-
-            FileInputStream fis = new FileInputStream(convFile);
-
-            byte[] data = new byte[1024];
-            int read = 0;
-            while ((read = fis.read(data)) != -1) {
-                sha1.update(data, 0, read);
-            }
-            byte[] hashBytes = sha1.digest();
-
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < hashBytes.length; i++) {
-                sb.append(Integer.toString((hashBytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            fileHash = sb.toString();
-        } catch (IOException | NoSuchAlgorithmException e) {
-            System.err.println(e);
-        }
-        return fileHash;
-    }
 
     //--------------гетери і сетери
 
@@ -307,19 +273,12 @@ public class ExFile {
         this.value_categories = value_categories;
     }
 
-    public String getSenger_sha() {
-        return senger_sha;
+    public String getSender_sha() {
+        return sender_sha;
     }
 
-    public void setSenger_sha(String senger_sha) {
-        this.senger_sha = senger_sha;
+    public void setSender_sha(String sender_sha) {
+        this.sender_sha = sender_sha;
     }
 
-    public String getGetter_sha() {
-        return getter_sha;
-    }
-
-    public void setGetter_sha(String getter_sha) {
-        this.getter_sha = getter_sha;
-    }
 }

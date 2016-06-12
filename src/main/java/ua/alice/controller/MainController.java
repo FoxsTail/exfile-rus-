@@ -263,7 +263,8 @@ public class MainController {
         if (!file.isEmpty()) {
             boolean verify = false;
             try {
-                verify = ExFile.verifyChecksum(file, exFile.getSenger_sha());
+                verify = ExFile.verifyChecksum(file, exFile.getSender_sha());
+                System.err.println(exFile.getSender_sha());
             } catch (IOException | NoSuchAlgorithmException e) {
                 System.err.println(e);
             }

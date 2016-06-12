@@ -96,3 +96,6 @@ select {
    /* font-size: medium;
     background-color: #ccc;*/
 }
+.hide{
+    visibility:  hidden;
+}
